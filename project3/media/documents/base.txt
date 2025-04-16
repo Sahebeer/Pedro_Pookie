@@ -1,0 +1,148 @@
+﻿	 Home 
+{% if user.is_authenticated %} 
+Hey, {{user.username}} 
+My Projects
+{% block head %} {% endblock %} {% else %} 
+Register as group
+Register as faculty
+Login
+{% endif %} {% if user.is_authenticated %} 
+Logout
+{% endif %} 
+{% block content %} {% endblock %} 
+{% extends 'base.html' %} {% block head %} {% if user.is_authenticated or faculty or not hod %} 
+· Class Projects
+{% endif %} {% endblock %} {% block content %} 
+
+{% if user.is_authenticated and not hod %} 
+My Class Projects
+
+{% if my_project %} {% for project in my_project %} 
+Project by : {{project.group.group_name}}
+{{project.title}}
+{{project.description}}
+Status : {{project.status}} 
+
+{% if project.is_approved_by_mentor %} Approved by mentor {% else %} Not approved by mentor {% endif %} {% if project.is_approved_by_HOD %} Approved by mentor {% else %} Not approved by HOD {% endif %} 
+
+{% endfor %} {% else %} 
+You have no projects.
+{% endif %} {% endif %} {% if user.is_authenticated and hod %} {% if my_project %} {% for project in my_project %} {% if project.is_approved_by_mentor %} 
+{{project.title}}
+By : {{project.group.group_name}}
+{{project.description}}
+{% endif %} 
+{% if project.is_approved_by_HOD %} The project, {{project.title}} has been approved by HOD. {% else %} The project , {{project.title}} has not been approved by HOD. {% endif %} 
+
+{% endfor %} {% else %} 
+You have no projects
+{% endif %} {% endif %} 
+{% endblock %} 
+{% extends 'base.html' %}
+
+{% block content %}
+
+<script type="text/javascript">
+alert("Mentor and Group should have same department")
+
+</script>
+
+
+
+
+
+
+{% endblock %}
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %} 
+{% if registered %} 
+Thank you for registering!!!!
+{% else %} 
+Registration Form 
+
+{% csrf_token %} 
+Registration Credentials
+
+{{user_form.username|as_crispy_field }} 
+{{user_form.email|as_crispy_field }} 
+{{user_form.password|as_crispy_field }} 
+
+Faculty Details
+
+{{faculty_form.name|as_crispy_field }} 
+{{faculty_form.department|as_crispy_field }} 
+{{faculty_form.contact|as_crispy_field }} 
+
+[Register]
+{% endif %} 
+{% endblock %} 
+{% extends 'base.html' %} {% block content %} 
+{% if username%} 
+Welcome , {{username}}!!!!
+{% else %} 
+Hey,user!!! 
+Please login....
+{% endif %} 
+{% endblock %} 
+{% extends 'base.html' %} {% load crispy_forms_tags %} {% block content %} 
+{% if registered %} 
+Thank you for registering as a group!!!! 
+Please Login to use the platform.. 
+{% else %} 
+Group Registration 
+
+{% csrf_token %} 
+Registration Credentials
+
+{{user_form.username|as_crispy_field }} 
+{{user_form.email|as_crispy_field }} 
+{{user_form.password|as_crispy_field }} 
+
+Institutional Details
+
+{{group_form.department|as_crispy_field }} 
+{{group_form.year|as_crispy_field }} 
+{{group_form.section|as_crispy_field }} 
+{{group_form.mentor|as_crispy_field }} Please select mentor from your department, or else you won't be able to register with this username.
+
+Group Details
+{{group_form.group_name|as_crispy_field }} 
+{{group_form.member_1_name|as_crispy_field }} 
+{{group_form.member_1_enrollment|as_crispy_field }} 
+{{group_form.member_2_name|as_crispy_field }} 
+{{group_form.member_2_enrollment|as_crispy_field }} 
+{{group_form.member_3_name|as_crispy_field }} 
+{{group_form.member_3_enrollment|as_crispy_field }} 
+{{group_form.contact|as_crispy_field }} 
+[Register]
+{% endif %} 
+{% endblock %} 
+{% extends 'base.html' %} {% block head %} {% if user.is_authenticated and faculty and not hod %} 
+· Class Projects
+· Approve Projects
+{% endif %} {% endblock %} {% block content %} 
+
+
+
+
+
+{% if not user.is_authenticated %} 
+Hey, please login or register to start using this platform
+{% elif user.is_authenticated and not hod %} 
+My Project
+
+{% for project in my_project %} 
+{{project.title}}
+By : {{project.group.group_name}}
+{{project.description}}
+{% if project.is_approved_by_mentor %} Your project has been approved by your mentor. {% else %} Your project has not been approved by your mentor. {% endif %} 
+{% if project.is_approved_by_HOD %} Your project has been approved by your HOD. {% else %} Your project has not been approved by your HOD. {% endif %} 
+
+{% endfor %} {% endif %} {% if user.is_authenticated and hod %} {% for project in my_project %} {% if project.is_approved_by_mentor %} 
+{{project.title}}
+By : {{project.group.group_name}}
+{{project.description}}
+
+{% if project.is_approved_by_HOD %} The project, {{project.title}} has been approved by HOD. {% else %} The project , {{project.title}} has not been approved by HOD. {% endif %} 
+
+{% endif %} {% endfor %} {% endif %} 
+{% endblock %} 
